@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./ProtectRoute";
 import jwt_decode from "jwt-decode";
 import VerifyAcc from "./pages/VerifyAccount";
+import { useState } from "react";
 
 export const isAuthenticated = () => {
   try {
@@ -34,7 +35,11 @@ export const isAuthenticated = () => {
 
 function App() {
   const [theme, colorMode] = useMode();
-  const isLoggedIn = isAuthenticated(); // Call isAuthenticated function
+  const [isLoggedIn, setIsLogedIn] = useState(isAuthenticated()); // Call isAuthenticated function
+
+  const handleUser = () => {
+    setIsLogedIn(isAuthenticated());
+  };
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -53,7 +58,7 @@ function App() {
           <Route path="/" element={<Landing />} />
 
           <Route path="/login" element={<Login />} />
-          <Route path="/otp" element={<Otp />} />
+          <Route path="/otp" element={<Otp />} handleUser={handleUser} />
           <Route path="/forgotPassword" element={<ForgotPass />} />
           <Route path="/resetPassword/*" element={<ResetPass />} />
           <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>

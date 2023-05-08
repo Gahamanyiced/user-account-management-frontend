@@ -8,6 +8,7 @@ import { verifyOtp } from "../features/Auth/VerifyOtpSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { ProSidebar } from "react-pro-sidebar";
 
 const Otp = (props) => {
   const dispatch = useDispatch();
@@ -30,8 +31,7 @@ const Otp = (props) => {
         render(res) {
           localStorage.setItem("token", res?.data?.data?.data?.token);
 
-          const token = localStorage.getItem("token");
-          console.log(token);
+          localStorage.getItem("token");
           navigate("/dash");
           return "Welcome Back";
         },

@@ -9,12 +9,18 @@ import { useDispatch } from "react-redux";
 import { useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { isAuthenticated } from "../App";
+import { useEffect } from "react";
 
 const Login = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
+
+  if (isAuthenticated()?.id) {
+    navigate("/dash");
+  }
 
   const {
     register,
