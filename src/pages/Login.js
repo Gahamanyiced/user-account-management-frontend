@@ -26,20 +26,28 @@ const Login = () => {
   });
 
   const handleLogin = async (data) => {
-    toast.promise(dispatch(login(data)).unwrap(), {
-      pending: "Logging in...",
-      success: {
-        render() {
-          navigate("/otp");
-          return "Check your email for OTP code";
-        },
-      },
-      error: {
-        render({ data }) {
-          return data.data.message;
-        },
-      },
-    });
+    toast("Logging in...", { colored: false });
+    localStorage.setItem("email", data.email);
+    const res = await dispatch(login(data));
+
+    console.log(res);
+    if (res.payload.data.status !== 200) {
+      toast.error("Invalid credentials");
+      return;
+    } else {
+      navigate("/otp");
+      toast.success("Check your email for OTP code");
+    }
+    // toast.promise(dispatch(login(data)).unwrap(), {
+    //   pending: "Logging in...",
+    //   success: {
+    //     render() {
+    //       navigate("/otp");
+    //       return "Check your email for OTP code";
+    //     },
+    //   },
+    //   error: "error occured during log in",
+    // });
   };
 
   return (

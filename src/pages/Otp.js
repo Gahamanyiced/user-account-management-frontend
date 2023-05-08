@@ -23,29 +23,25 @@ const Otp = (props) => {
   const navigate = useNavigate();
 
   const handleVerify = async (data) => {
-    toast.promise(
-      dispatch(
-        verifyOtp({ ...data, email: "shejaemeric2@gmail.com" })
-      ).unwrap(),
-      {
-        pending: "Please wait a moment...",
-        success: {
-          render(res) {
-            localStorage.setItem("token", res?.data?.data?.data?.token);
+    const email = localStorage.getItem("email");
+    toast.promise(dispatch(verifyOtp({ ...data, email: email })).unwrap(), {
+      pending: "Please wait a moment...",
+      success: {
+        render(res) {
+          localStorage.setItem("token", res?.data?.data?.data?.token);
 
-            const token = localStorage.getItem("token");
-            console.log(token);
-            navigate("/dash");
-            return "Welcome Back";
-          },
+          const token = localStorage.getItem("token");
+          console.log(token);
+          navigate("/dash");
+          return "Welcome Back";
         },
-        error: {
-          render({ data }) {
-            return data.data.message;
-          },
+      },
+      error: {
+        render({ data }) {
+          return data.data.message;
         },
-      }
-    );
+      },
+    });
   };
 
   return (
