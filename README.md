@@ -12,3 +12,9 @@ $ npm install
 ```bash
 $ npm run start
 ```
+
+# Building the app
+
+```bash
+$ npm run build
+```
