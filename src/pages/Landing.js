@@ -2,8 +2,22 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import { Stack, Typography } from "@mui/material";
 import logo from "../assets/logo.png";
+import { useState, useEffect } from "react";
+import { isAuthenticated } from "../App";
+import { Navigate } from "react-router-dom";
 
 const Landing = () => {
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated()?.id) {
+      setShouldRedirect(true);
+    }
+  }, []);
+
+  if (shouldRedirect) {
+    return <Navigate to="/dash" />;
+  }
   return (
     <>
       <Stack

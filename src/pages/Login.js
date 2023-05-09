@@ -10,17 +10,16 @@ import { useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { isAuthenticated } from "../App";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 
-const Login = () => {
+const Login = (props) => {
+  const navigate = useNavigate();
+
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const theme = useTheme();
 
-  if (isAuthenticated()?.id) {
-    navigate("/dash");
-  }
+  const theme = useTheme();
 
   const {
     register,
@@ -55,6 +54,19 @@ const Login = () => {
     //   error: "error occured during log in",
     // });
   };
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated()?.id) {
+      setShouldRedirect(true);
+    }
+  }, []);
+
+  if (shouldRedirect) {
+    props.handleUser();
+    console.log(localStorage.getItem("token"));
+    return <Navigate to="/dash" />;
+  }
 
   return (
     <Box my={5} px={10}>

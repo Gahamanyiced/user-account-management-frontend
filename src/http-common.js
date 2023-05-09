@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: "https://user-account-management.onrender.com/api/v1/",
+  baseURL: " https://user-account-management.up.railway.app/api/v1/",
 });
 
 const requestHandler = (request) => {

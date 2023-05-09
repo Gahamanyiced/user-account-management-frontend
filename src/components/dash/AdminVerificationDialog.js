@@ -13,6 +13,8 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    mt: 3,
+    mb: 3,
   },
   image: {
     marginRight: 2,

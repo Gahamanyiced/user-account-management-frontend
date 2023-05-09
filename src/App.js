@@ -26,7 +26,6 @@ export const isAuthenticated = () => {
     if (decoded.exp * 1000 < currentDate.getTime()) {
       return; //Token is expired
     }
-    console.log(decoded);
     return decoded;
   } catch (e) {
     return;
@@ -40,6 +39,9 @@ function App() {
   const handleUser = () => {
     setIsLogedIn(isAuthenticated());
   };
+
+  if (isAuthenticated()?.id) {
+  }
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -57,10 +59,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Landing />} />
 
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} handleUser={handleUser} />
           <Route path="/otp" element={<Otp />} handleUser={handleUser} />
           <Route path="/forgotPassword" element={<ForgotPass />} />
-          <Route path="/resetPassword/*" element={<ResetPass />} />
+          <Route path="/resetPassword/:token" element={<ResetPass />} />
           <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
             <Route path="/dash" element={<Dash />} />
             <Route path="/verify" element={<Verify />} />

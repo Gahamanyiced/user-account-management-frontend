@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 
 import { useState } from "react";
 import Header from "../reusable/Header";
@@ -13,7 +13,7 @@ import { updateUserValidation } from "../../validations";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { updateUser } from "../../features/User/updateUserSlice";
+import { updateUser } from "../../features/User/UpdateUserSlice";
 
 const Dashboard = (props) => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -91,9 +91,53 @@ const Dashboard = (props) => {
   return (
     <Box m="20px" px={2}>
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-      </Box>
+      <Stack
+        direction="row"
+        alignItems="baseline"
+        justifyContent="space-between"
+      >
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        </Box>
+        {props.user.role !== "admin" && (
+          <Button
+            color={
+              props.user.accountStatus === "VERIFIED"
+                ? "secondary"
+                : props.user.accountStatus === "UNVERIFIED"
+                ? "error"
+                : props.user.accountStatus === "PENDING"
+                ? "warning"
+                : "secondary"
+            }
+            sx={{
+              backgroundColor:
+                props.user.accountStatus === "VERIFIED"
+                  ? "secondary.main"
+                  : props.user.accountStatus === "UNVERIFIED"
+                  ? "error.main"
+                  : props.user.accountStatus === "PENDING"
+                  ? "warning.main"
+                  : "#fff0",
+              color: "white !important",
+              fontWeight: "bold",
+              fontSize: "12px",
+              padding: "10px 30px",
+              mr: 5,
+              width: "fit-content",
+            }}
+            disabled
+          >
+            {props.user.accountStatus === "VERIFIED"
+              ? "VERIFIED"
+              : props.user.accountStatus === "UNVERIFIED"
+              ? "UNVERIFIED"
+              : props.user.accountStatus === "PENDING"
+              ? "PENDING"
+              : ""}
+          </Button>
+        )}
+      </Stack>
 
       {/* GRID & CHARTS */}
       <Box my={5} px={3}>

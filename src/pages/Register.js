@@ -104,11 +104,11 @@ const Register = () => {
         <TextField
           variant="filled"
           fullWidth
-          type="text"
           label="Password"
           control={control}
           placeholder="Enter your password"
           {...register("password")}
+          type="password"
           error={errors?.password ? true : false}
           helperText={errors?.password ? errors?.password?.message : null}
           sx={{ gridColumn: "span 2" }}

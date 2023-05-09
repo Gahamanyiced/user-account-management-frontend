@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { getAllUsers } from "../../features/User/getAllUserSlice";
 import AdminVerificationDialog from "./AdminVerificationDialog";
-import { updateUser } from "../../features/User/updateUserSlice";
+import { verifyUser } from "../../features/User/verifyUserSlice";
 
 import {
   Button,
@@ -17,7 +17,9 @@ import {
   TableContainer,
   TableCell,
   Stack,
+  Typography,
 } from "@mui/material";
+import { isAuthenticated } from "../../App";
 
 const styles = {
   table: {
@@ -38,14 +40,14 @@ function GetUsers() {
   const [selectedUser, setSelectedUser] = useState();
   const [users, setUsers] = useState([]);
   const dispatch = useDispatch();
+  const send = async () => {
+    const res = await dispatch(getAllUsers());
+    setUsers(res?.payload?.data?.data);
+  };
 
   useEffect(() => {
-    const send = async () => {
-      const res = await dispatch(getAllUsers());
-      console.log(res?.payload?.data?.data);
-      setUsers(res?.payload?.data?.data);
-    };
     send();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const handleSelect = (user) => {
@@ -56,10 +58,17 @@ function GetUsers() {
   const onApprove = () => {
     let formData = new FormData();
     formData.append("accountStatus", "VERIFIED");
-    toast.promise(dispatch(updateUser()).unwrap(), {
+
+    const payload = {
+      id: selectedUser?._id,
+      data: formData,
+    };
+    toast.promise(dispatch(verifyUser(payload)).unwrap(), {
       pending: "Loading...",
       success: {
         render() {
+          send();
+          setDisplayVerification(false);
           return "Verification was successfull";
         },
       },
@@ -72,39 +81,36 @@ function GetUsers() {
   };
 
   const renderButton = (accountStatus, user) => {
-    if (accountStatus === "UNVERIFIED") {
-      return (
+    if (user?.accountStatus === "VERIFIED") {
+      return <Typography sx={{ textAlign: "left" }}>Verified</Typography>;
+    }
+
+    if (!(user?.documentImage && user?.identifierNumber)) {
+      return <Typography sx={{ textAlign: "left" }}>No data</Typography>;
+    }
+
+    const button =
+      user?.role === "admin" ? (
+        "Admin"
+      ) : (
         <Button
-          variant="contained"
-          color="error"
+          color={"secondary"}
+          sx={{
+            backgroundColor: "secondary.main",
+            color: "white !important",
+            fontWeight: "bold",
+            fontSize: "12px",
+            padding: "10px 30px",
+            mr: 5,
+            width: "fit-content",
+          }}
           onClick={() => handleSelect(user)}
         >
           Verify
         </Button>
       );
-    } else if (accountStatus === "PENDING") {
-      return (
-        <Button
-          variant="contained"
-          disabled
-          color="warning"
-          onClick={handleSelect(user)}
-        >
-          Pending
-        </Button>
-      );
-    } else if (accountStatus === "VERIFIED") {
-      return (
-        <Button
-          variant="contained"
-          disabled
-          color="success"
-          onClick={handleSelect(user)}
-        >
-          Verified
-        </Button>
-      );
-    }
+
+    return button;
   };
 
   return (
@@ -124,7 +130,7 @@ function GetUsers() {
         />
       )}
       <Stack m={3} sx={{ height: "94vh", boxSizing: "content-box" }}>
-        <Header title="User Management" subtitle="manage all your users" />
+        <Header title="User Management" subtitle="Manage all your users" />
         <TableContainer
           component={Paper}
           sx={{
@@ -158,31 +164,36 @@ function GetUsers() {
                 <TableCell align="left" sx={styles.header}>
                   Nationality
                 </TableCell>
-                <TableCell align="left" sx={styles.header}>
-                  Status
+                <TableCell align="center " sx={styles.header}>
+                  Action
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user?._id}>
-                  <TableCell component="th" scope="row">
-                    <Avatar alt={user?.name} src={user?.photo} />
-                  </TableCell>
-                  <TableCell align="left">{user?.name}</TableCell>
-                  <TableCell align="left">{user?.gender}</TableCell>
-                  <TableCell align="left">{user?.age}</TableCell>
-                  <TableCell align="left">{user?.email}</TableCell>
+              {users
+                .filter(
+                  (item) =>
+                    item.role !== "admin" && item._id !== isAuthenticated().id
+                )
+                .map((user) => (
+                  <TableRow key={user?._id}>
+                    <TableCell component="th" scope="row">
+                      <Avatar alt={user?.name} src={user?.photo} />
+                    </TableCell>
+                    <TableCell align="left">{user?.name}</TableCell>
+                    <TableCell align="left">{user?.gender}</TableCell>
+                    <TableCell align="left">{user?.age}</TableCell>
+                    <TableCell align="left">{user?.email}</TableCell>
 
-                  <TableCell align="left">
-                    {user?.dateOfBirth?.split("T")[0]}
-                  </TableCell>
-                  <TableCell align="left">{user?.nationality}</TableCell>
-                  <TableCell align="left">
-                    {renderButton(user?.accountStatus, user)}
-                  </TableCell>
-                </TableRow>
-              ))}
+                    <TableCell align="left">
+                      {user?.dateOfBirth?.split("T")[0]}
+                    </TableCell>
+                    <TableCell align="left">{user?.nationality}</TableCell>
+                    <TableCell align="left">
+                      {renderButton(user?.accountStatus, user)}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

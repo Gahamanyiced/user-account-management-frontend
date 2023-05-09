@@ -8,7 +8,7 @@ import { verifyOtp } from "../features/Auth/VerifyOtpSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ProSidebar } from "react-pro-sidebar";
+import { isAuthenticated } from "../App";
 
 const Otp = (props) => {
   const dispatch = useDispatch();
@@ -30,10 +30,13 @@ const Otp = (props) => {
       success: {
         render(res) {
           localStorage.setItem("token", res?.data?.data?.data?.token);
-
           localStorage.getItem("token");
-          navigate("/dash");
-          return "Welcome Back";
+
+          if (isAuthenticated().id) {
+            navigate("/dash");
+            return "Welcome Back";
+          }
+          return "An error occured while logging in";
         },
       },
       error: {

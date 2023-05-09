@@ -23,6 +23,7 @@ const ResetPass = (props) => {
     resolver: yupResolver(resetPasswordValidation),
   });
   const { token } = useParams();
+  console.log(token);
 
   const handleSend = async (data) => {
     if (data.password !== data.confirmPassword) {

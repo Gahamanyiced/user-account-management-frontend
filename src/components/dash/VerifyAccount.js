@@ -23,7 +23,8 @@ const VerifyAccount = () => {
   const onVerify = (data) => {
     let formData = new FormData();
     formData.append("identifierNumber", data.identifierNumber);
-    formData.append("documentImage", data.documentImage);
+    formData.append("image_file", data.documentImage[0]);
+    formData.append("accountStatus", "PENDING");
 
     toast.promise(dispatch(updateUserId(formData)).unwrap(), {
       pending: "Loading...",

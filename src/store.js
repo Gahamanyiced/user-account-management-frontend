@@ -9,7 +9,8 @@ import forgotPasswordSliceReducer from "./features/Auth/forgotPasswordSlice";
 import getAllUserSliceReducer from "./features/User/getAllUserSlice";
 import getOneUserSliceReducer from "./features/User/getOneUserSlice";
 import updateUserIdSliceReducer from "./features/User/updateUserId";
-import updateUserSliceReducer from "./features/User/updateUserSlice";
+import updateUserSliceReducer from "./features/User/UpdateUserSlice";
+import verifyUserSliceReducer from "./features/User/verifyUserSlice";
 
 const reducer = {
   loginSlice: loginSliceReducer,
@@ -21,6 +22,7 @@ const reducer = {
   getOneUserSlice: getOneUserSliceReducer,
   updateUserIdSlice: updateUserIdSliceReducer,
   updateUserSlice: updateUserSliceReducer,
+  verifyUserSlice: verifyUserSliceReducer,
 };
 
 const middleware = [];

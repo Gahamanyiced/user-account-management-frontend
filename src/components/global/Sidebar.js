@@ -8,7 +8,7 @@ import {
   Button,
   Stack,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -26,11 +26,9 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
       style={{
         color: colors.grey[100],
       }}
-      onClick={() => setSelected(title)}
       icon={icon}
     >
       <Typography>{title}</Typography>
-      <Link to={to} />
     </MenuItem>
   );
 };
@@ -39,7 +37,7 @@ const Sidebar = (props) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Dashboard");
+  const [selected, setSelected] = useState("none");
   const navigate = useNavigate();
 
   return (
@@ -114,61 +112,26 @@ const Sidebar = (props) => {
                     src={props.photo}
                   />
                 </Box>
-                {!props.admin && (
-                  <Box>
-                    {props.status === "UNVERIFIED" ? (
-                      <Button
-                        color="error"
-                        sx={{
-                          //   backgroundColor: "secondary.dark",
-                          //                 backgroundColor: colors.blueAccent[700],
-                          backgroundColor: "error.main",
-                          color: "white !important",
-                          fontWeight: "bold",
-                          fontSize: "12px",
-                          padding: "10px 20px",
-                          width: "100%",
-                          my: 5,
-                        }}
-                        onClick={() => {
-                          navigate("/verifyAccount");
-                        }}
-                      >
-                        Verify account{" "}
-                      </Button>
-                    ) : props.status === "PENDING" ? (
-                      <Button
-                        color="warning"
-                        sx={{
-                          backgroundColor: "warning.main",
-                          color: "white !important",
-                          fontWeight: "bold",
-                          fontSize: "12px",
-                          padding: "10px 20px",
-                          width: "100%",
-                          my: 5,
-                        }}
-                      >
-                        Pending
-                      </Button>
-                    ) : (
-                      <Button
-                        color="secondary"
-                        sx={{
-                          backgroundColor: "secondary.dark",
-                          color: "white !important",
-                          fontWeight: "bold",
-                          fontSize: "12px",
-                          padding: "10px 20px",
-                          width: "100%",
-                          my: 5,
-                        }}
-                      >
-                        Verified
-                      </Button>
-                    )}
-                  </Box>
+                {!props.admin && props.status === "UNVERIFIED" && (
+                  <Button
+                    color="secondary"
+                    sx={{
+                      backgroundColor: "secondary.main",
+                      color: "white !important",
+                      fontWeight: "bold",
+                      fontSize: "12px",
+                      padding: "10px 20px",
+                      width: "50%",
+                      my: 5,
+                    }}
+                    onClick={() => {
+                      props.handleChangePanel("verify");
+                    }}
+                  >
+                    Verify your account{" "}
+                  </Button>
                 )}
+
                 <Box textAlign="center">
                   <Typography
                     variant="h2"
@@ -188,21 +151,37 @@ const Sidebar = (props) => {
                 alignItems="center"
                 paddingLeft={isCollapsed ? undefined : "10%"}
               >
-                <Item
-                  title="Dashboard"
-                  to="/dash"
-                  icon={<HomeOutlinedIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
-                {props.admin && (
+                <Box onClick={() => props.handleChangePanel("dash")}>
                   <Item
-                    title="Verify Accounts"
-                    to="/verify"
-                    icon={<PeopleOutlinedIcon />}
+                    title="Dashboard"
+                    to="/dash"
+                    icon={<HomeOutlinedIcon />}
                     selected={selected}
                     setSelected={setSelected}
                   />
+                </Box>
+                {/* {props.admin !== false && (
+                  <Box onClick={() => props.handleChangePanel("verify")}>
+                    <Item
+                      title="Verify Accounts"
+                      to="/verify"
+                      icon={<PeopleOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                  </Box>
+                )} */}
+
+                {props.admin && (
+                  <Box onClick={() => props.handleChangePanel("verify")}>
+                    <Item
+                      title="Verify Accounts"
+                      to="/verify"
+                      icon={<PeopleOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                  </Box>
                 )}
                 <Button
                   color="secondary"

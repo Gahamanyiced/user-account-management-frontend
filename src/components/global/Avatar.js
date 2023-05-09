@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
 import { Stack } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { updateUser } from "../../features/User/updateUserSlice";
+import { updateUser } from "../../features/User/UpdateUserSlice";
 
 function CircularImage(props) {
   const [avatarSrc, setAvatarSrc] = useState(props.src);
+  const [updated, setUpdated] = useState(false);
+
   const dispatch = useDispatch();
 
   const handleImageChange = (event) => {
@@ -20,12 +23,13 @@ function CircularImage(props) {
       reader.readAsDataURL(file);
     }
     let formData = new FormData();
-    formData.append("photo", file);
+    formData.append("image_file", file);
 
     toast.promise(dispatch(updateUser(formData)).unwrap(), {
       pending: "Loading...",
       success: {
         render() {
+          setUpdated(true);
           return "Picture has been uploaded";
         },
       },
@@ -42,16 +46,37 @@ function CircularImage(props) {
   };
 
   return (
-    <Stack alignItems="center" justifyContent="center">
-      <Avatar sx={{ width: 64, height: 64 }} alt="Avatar" src={avatarSrc} />
+    <Stack
+      alignItems="center"
+      justifyContent="center"
+      sx={{ position: "relative" }}
+    >
+      <Avatar
+        sx={{ width: 64, height: 64 }}
+        alt="Avatar"
+        src={updated ? avatarSrc : props.src}
+      />
       <input
+        id="avatar-input"
         type="file"
         accept="image/*"
         onChange={handleImageChange}
-        sx={{ display: "none" }}
+        style={{ display: "none" }}
       />
-
-      <IconButton component="span" onClick={handleAvatarClick}></IconButton>
+      <IconButton
+        color="secondary"
+        sx={{
+          position: "absolute",
+          bottom: -6,
+          right: -6,
+          bgcolor: "secondary.main",
+          color: "text.secondary",
+          zIndex: 1,
+        }}
+        onClick={handleAvatarClick}
+      >
+        <EditIcon sx={{ fontSize: 16, color: "white" }} />
+      </IconButton>
     </Stack>
   );
 }
