@@ -56,7 +56,9 @@ const ResetPass = (props) => {
         pending: "Please wait a moment...",
         success: {
           render() {
+            localStorage.removeItem("token");
             navigate("/login");
+
             return "Password successfully reseted";
           },
         },

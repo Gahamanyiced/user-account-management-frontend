@@ -11,6 +11,12 @@ function Dash(props) {
   const dispatch = useDispatch();
   const [user, setUser] = useState([]);
   const [panel, setPanel] = useState("dash");
+
+  const send = async () => {
+    const res = await dispatch(getOneUser());
+    setUser(res?.payload?.data?.data);
+  };
+
   useEffect(() => {
     const send = async () => {
       const res = await dispatch(getOneUser());
@@ -18,8 +24,9 @@ function Dash(props) {
     };
     send();
   }, [dispatch]);
+
   const handleChangePanel = (newPanel) => {
-    console.log(newPanel);
+    send();
     panel === "dash" ? setPanel(newPanel) : setPanel(newPanel);
   };
 

@@ -15,6 +15,7 @@ import { Navigate } from "react-router-dom";
 
 const Login = (props) => {
   const navigate = useNavigate();
+  const decoded = isAuthenticated();
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const dispatch = useDispatch();
@@ -29,6 +30,9 @@ const Login = (props) => {
   } = useForm({
     resolver: yupResolver(loginValidation),
   });
+  if (decoded?.id) {
+    return <Navigate to="/dash" replace={true} />;
+  }
 
   const handleLogin = async (data) => {
     toast("Logging in...", { colored: false });
@@ -43,30 +47,7 @@ const Login = (props) => {
       navigate("/otp");
       toast.success("Check your email for OTP code");
     }
-    // toast.promise(dispatch(login(data)).unwrap(), {
-    //   pending: "Logging in...",
-    //   success: {
-    //     render() {
-    //       navigate("/otp");
-    //       return "Check your email for OTP code";
-    //     },
-    //   },
-    //   error: "error occured during log in",
-    // });
   };
-  const [shouldRedirect, setShouldRedirect] = useState(false);
-
-  useEffect(() => {
-    if (isAuthenticated()?.id) {
-      setShouldRedirect(true);
-    }
-  }, []);
-
-  if (shouldRedirect) {
-    props.handleUser();
-    console.log(localStorage.getItem("token"));
-    return <Navigate to="/dash" />;
-  }
 
   return (
     <Box my={5} px={10}>
@@ -95,7 +76,6 @@ const Login = (props) => {
           <TextField
             variant="filled"
             fullWidth
-            type="text"
             label="Password"
             placeholder="Enter your Password"
             {...register("password")}
@@ -103,6 +83,7 @@ const Login = (props) => {
             error={errors?.password ? true : false}
             helperText={errors?.password ? errors?.password?.message : null}
             sx={{ gridColumn: "span 2" }}
+            type={"password"}
           />
           <a
             style={{ color: theme.palette.secondary.dark }}

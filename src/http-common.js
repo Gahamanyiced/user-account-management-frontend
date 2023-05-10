@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const http = axios.create({
   baseURL: " https://user-account-management.up.railway.app/api/v1/",
@@ -12,7 +13,6 @@ const requestHandler = (request) => {
 const responseHandler = (response) => {
   if (response.status === 401) {
     localStorage.removeItem("token");
-    window.location.href = "/auth/";
   }
   return response;
 };
@@ -20,7 +20,6 @@ const responseHandler = (response) => {
 const errorHandler = (error) => {
   if (error.response.status === 401) {
     localStorage.removeItem("token");
-    window.location.href = "/auth/";
   }
   return Promise.reject(error);
 };

@@ -25,6 +25,7 @@ const Otp = (props) => {
 
   const handleVerify = async (data) => {
     const email = localStorage.getItem("email");
+    localStorage.removeItem("token");
     toast.promise(dispatch(verifyOtp({ ...data, email: email })).unwrap(), {
       pending: "Please wait a moment...",
       success: {

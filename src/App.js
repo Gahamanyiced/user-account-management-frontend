@@ -34,14 +34,6 @@ export const isAuthenticated = () => {
 
 function App() {
   const [theme, colorMode] = useMode();
-  const [isLoggedIn, setIsLogedIn] = useState(isAuthenticated()); // Call isAuthenticated function
-
-  const handleUser = () => {
-    setIsLogedIn(isAuthenticated());
-  };
-
-  if (isAuthenticated()?.id) {
-  }
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -59,11 +51,11 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Landing />} />
 
-          <Route path="/login" element={<Login />} handleUser={handleUser} />
-          <Route path="/otp" element={<Otp />} handleUser={handleUser} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/otp" element={<Otp />} />
           <Route path="/forgotPassword" element={<ForgotPass />} />
           <Route path="/resetPassword/:token" element={<ResetPass />} />
-          <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
+          <Route element={<ProtectedRoute isLoggedIn={isAuthenticated} />}>
             <Route path="/dash" element={<Dash />} />
             <Route path="/verify" element={<Verify />} />
             <Route path="/verifyAccount" element={<VerifyAcc />} />

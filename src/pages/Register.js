@@ -40,6 +40,7 @@ const Register = () => {
       pending: "Registering user",
       success: {
         render() {
+          localStorage.removeItem("token");
           navigate("/login");
           return "Successfully Registered";
         },

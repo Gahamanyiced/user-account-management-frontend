@@ -14,6 +14,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { updateUser } from "../../features/User/UpdateUserSlice";
+import { useSelector } from "react-redux";
+import { selectGetOneUser } from "../../features/User/getOneUserSlice";
 
 const Dashboard = (props) => {
   const isNonMobile = useMediaQuery("(min-width:600px)");

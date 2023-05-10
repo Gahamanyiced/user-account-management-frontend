@@ -31,6 +31,7 @@ const VerifyAccount = () => {
       success: {
         render() {
           navigate("/dash");
+
           return "Verification is pending";
         },
       },
